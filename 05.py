@@ -134,4 +134,4 @@ def part2(input: str, debug = False, progress = False) -> int :
                 
     return(min_final_location)
 
-print(part2("5-input.txt", progress = True))
+print(part2("05-input.txt", progress = True))

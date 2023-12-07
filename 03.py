@@ -71,4 +71,4 @@ def part2(input_file: str) -> int:
                     s += m
     return s
     
-print(part2("3-input.txt"))
+print(part2("03-input.txt"))

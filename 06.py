@@ -59,6 +59,6 @@ def part2bis(input: str) -> int :
     return j-i+1
 
 start = time.time()
-a = part2bis("6-input.txt")
+a = part2bis("06-input.txt")
 end = time.time()
 print(f"{a} (found in {end-start} seconds)")
