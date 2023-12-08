@@ -64,7 +64,6 @@ def order_draws(hands : List[int]) -> List[int]:
          '2': 2,
          'J': 1}
     
-    res = []
     num_hands  = [[] for _ in range(len(hands))]
     indexes = [n for n in range(len(hands))]
     
@@ -101,7 +100,6 @@ def solve(input: str, jokers:bool, debug: bool) -> List[str]:
                 it.append(i)
                 
         for di in order_draws(t):
-
             ranks.append(values[it[di]])
                 
     for i, v in enumerate(ranks):
@@ -119,4 +117,4 @@ print(solve('07-input.txt', jokers = True, debug = False))
 
 end = time.time()
 
-print(f"Solution found in {round(end-start,2)} seconds")
+print(f"Solution found in {round(end-start,5)} seconds")
