@@ -1,9 +1,10 @@
 import re
 import time
 from typing import *
+from itertools import groupby
 
-def get_txt_array(input: str) -> List[str]:
-    with open(input,'r',encoding = 'utf-8') as f:
+def get_txt_array(input_name: str) -> List[str]:
+    with open(input_name,'r',encoding = 'utf-8') as f:
         return f.read().splitlines()
         
 def compute_strings(t: List[List[str]], axis: str, i: int, dx: int) -> tuple:
@@ -36,58 +37,51 @@ def check_mirror(t: List[List[str]], axis: str, i: int, verbose=False, tolerance
 def prettyprint(a,b,c):
     if c == "h":
         for i, line in enumerate(a):
-            if i == b :
-                print(f"{i%10} v {line} v {i%10}")
-            elif i == b+1:
-                print(f"{i%10} ^ {line} ^ {i%10}")
-            else:
-                print(f"{i%10}   {line}   {i%10}")
+            arrow = "v" if i == b else "^" if i == b + 1 else " "
+            print(f"{i % 10} {arrow} {line} {arrow} {i % 10}")
     else:   
-        for k in range(len(a[0])):
-            print((k%10), end = "")
-        print("\n" + " " * (b) + "><" + " " * (len(a[0])-b+1))
+        separator = " " * (b) + "><" + " " * (len(a[0]) - b + 1)
+        indices = "".join(str(k % 10) for k in range(len(a[0])))
+        print(indices)
+        print(separator)
         for line in a:
             print(line)
-        print(" " * (b) + "><" + " " * (len(a[0])-b+1))
-        for k in range(len(a[0])):
-            print((k%10), end = "")
+        print(separator)
+        print(indices)
+        
+    print()
 
-def solve(input: str, part: int, debug = False) -> int:
-    txt = get_txt_array(input)
+def solve(input_name: str, part: int, debug = False) -> int:
+    txt = get_txt_array(input_name)
     formated_txt = [[]]
     result = 0
-    tol = 1 if part == 2 else 0
+    tolerance = 1 if part == 2 else 0
     
     #Separate each dataset
-    for i in range(len(txt)):
-        if not txt[i]:
-            formated_txt.append([])
-        else:
-            formated_txt[-1].append(txt[i])
+    formated_txt = [list(group) for key, group in groupby(txt, key=bool) if key]
     
     for dataset in formated_txt:
-        height = len(dataset)
-        width = len(dataset[0])
+        height, width = len(dataset), len(dataset[0])
         mirror = -1
         
         for y in range(0,height-1):
-            if check_mirror(dataset, "h", y, tolerance = tol):
+            if check_mirror(dataset, "h", y, tolerance = tolerance):
                 result += 100*(y+1)
                 mirror = y+1
                 mirror_type = "h"
                 
         
         for x in range(0,width-1):
-            if check_mirror(dataset, "v", x, tolerance = tol):
+            if check_mirror(dataset, "v", x, tolerance = tolerance):
                 result += (x+1)
                 mirror = x+1
                 mirror_type = "v"
                 
         if debug:
-            print("\n\n[New dataset]")
+            print("\n[New dataset]")
             prettyprint(dataset, mirror-1, mirror_type)
     
     return result
 
-a = solve("13-input.txt", part = 2, debug = True)
-print(a)
+res = solve("13-input.txt", part = 1, debug = False)
+print(res)
