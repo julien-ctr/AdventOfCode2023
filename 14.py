@@ -107,7 +107,7 @@ def part2(input_name: str, debug: bool = True) -> int:
     """
     Strategy : 
     Look for a loop of length < 1_000_000_000
-    then just take the remainder of 1_000_000_000 - loop_start
+    then just take the remainder of (1_000_000_000 - loop_start) / loop_length
     and plug it into the score values of the loop
     """
     
