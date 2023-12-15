@@ -8,12 +8,12 @@ def get_txt_array(input: str) -> List[str]:
 
 def prettyprint(t: List[List[int]]):
     result = ""    
-    width = len(str(max(list(map(lambda x: abs(x),t[0])))))+1
+    width = len(str(max(t[0],key=abs)))+1
     
     for row in t:
         s = ""
         for val in row:
-            s += str(val) + ' ' * ((width - len(str(val)))+0)
+            s += str(val) + ' ' * (width - len(str(val)))
         result += '\n' + s.center(width * len(t[0]))
         
     print(result)

@@ -107,7 +107,7 @@ def part2(input_name: str, debug: bool = True) -> int:
     """
     Strategy : 
     Look for a loop of length < 1_000_000_000
-    then just take the remainder of 1_000_000_000 - loop_start
+    then just take the remainder of (1_000_000_000 - loop_start) / loop_length
     and plug it into the score values of the loop
     """
     
@@ -118,10 +118,8 @@ def part2(input_name: str, debug: bool = True) -> int:
     current_id = get_grid_identity(txt)
     c = 0
     while current_id not in old_ids and c < 1_000_000_000:
-        if current_id not in old_ids:
-            old_ids.append(current_id)
-            old_scores.append(current_score(txt))
-            
+        old_ids.append(current_id)
+        old_scores.append(current_score(txt))
         cycle(txt)
         current_id = get_grid_identity(txt)
         
@@ -141,6 +139,6 @@ def part2(input_name: str, debug: bool = True) -> int:
 
     return final_score
 
-a = part2("14-input.txt", debug = False)
+a = part2("14-input.txt", debug = True)
 print(a)  
 
