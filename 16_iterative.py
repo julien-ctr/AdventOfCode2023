@@ -3,13 +3,14 @@ from typing import *
 from PIL import Image, ImageDraw, ImageFont
 import cv2
 import numpy as np
-from copy import deepcopy
+from itertools import groupby
 
 def get_txt_array(input_name: str) -> List[str]:
     with open(input_name,'r',encoding = 'utf-8') as f:
         return f.read().splitlines()
 
 def debug_print(v, g):
+    v = [i[0] for i in v]
     w,h = len(g[0]), len(g)
     t = ["" for _ in range(h)]
     for y in range(h):
@@ -21,11 +22,12 @@ def debug_print(v, g):
     for el in t:
         print(el)
 
-def current_img(last_image, new_pixel, i, upscale):
-    x, y = new_pixel[0], new_pixel[1]
-    for dx in range(upscale):
-        for dy in range(upscale):
-            last_image.putpixel((upscale*x+dx,upscale*y+dy), (255,0,0))
+def current_img(last_image, new_pixels, upscale):
+    for new_pixel in new_pixels:
+        x, y = new_pixel[0], new_pixel[1]
+        for dx in range(upscale):
+            for dy in range(upscale):
+                last_image.putpixel((upscale*x+dx,upscale*y+dy), (255,0,0))
     return last_image
 
 def add_frame(vid, fr):
@@ -33,9 +35,10 @@ def add_frame(vid, fr):
     vid.write(cv2.cvtColor(np.array(imtemp), cv2.COLOR_RGB2BGR))
 
 def solve(input_name: str, part: int, debug: bool = False, generate_video: bool = False) -> int:
-    def visit(cell: Tuple[int, int], direction: Tuple[int, int]):
+    def visit(cell: Tuple[int, int], direction: Tuple[int, int], depth = 0):
         visited.add(cell + direction)
-        visited_cells.add(cell)
+        if cell not in [i[0] for i in visited_cells]:
+            visited_cells.add((cell,depth))
 
         if cell[0] + direction[0] < 0 or cell[0] + direction[0] > len(grid[0]) - 1 \
                 or cell[1] + direction[1] < 0 or cell[1] + direction[1] > len(grid) - 1:
@@ -46,36 +49,45 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
         
         if next_cell == "/":
             if (next_cell_x, next_cell_y, -direction[1], -direction[0]) not in visited:
-                stack.append(((next_cell_x, next_cell_y), (-direction[1], -direction[0])))
+                stack.append(((next_cell_x, next_cell_y), (-direction[1], -direction[0]), depth+1))
         elif next_cell == "\\":
             if (next_cell_x, next_cell_y, direction[1], direction[0]) not in visited:
-                stack.append(((next_cell_x, next_cell_y), (direction[1], direction[0])))
+                stack.append(((next_cell_x, next_cell_y), (direction[1], direction[0]), depth+1))
         elif next_cell == "|" and direction[0] != 0:
             if (next_cell_x, next_cell_y, 0, -1) not in visited:
-                stack.append(((next_cell_x, next_cell_y), (0, 1)))
-                stack.append(((next_cell_x, next_cell_y), (0, -1)))
+                stack.append(((next_cell_x, next_cell_y), (0, 1), depth+1))
+                stack.append(((next_cell_x, next_cell_y), (0, -1), depth+1))
         elif next_cell == "-" and direction[1] != 0:
             if (next_cell_x, next_cell_y, 1, 0) not in visited:
-                stack.append(((next_cell_x, next_cell_y), (1, 0)))
-                stack.append(((next_cell_x, next_cell_y), (-1, 0)))
+                stack.append(((next_cell_x, next_cell_y), (1, 0), depth+1))
+                stack.append(((next_cell_x, next_cell_y), (-1, 0), depth+1))
         else:
-            stack.append(((next_cell_x, next_cell_y), direction))
-
+            stack.append(((next_cell_x, next_cell_y), direction, depth+1))
+    
+    
     results = {}
     grid = get_txt_array(input_name)
     size = len(grid)
     
     if part == 1: 
         i = 0
-        visited = set()
-        visited_cells = set()
-        stack = [((-1,0),(1,0))] # ((Cell), (direction))
-        previous_v = deepcopy(visited_cells)
+        visited = set() # Can contain a cell multiple times if it has been reached with different direction rays
+        visited_cells = set() # Only countains each cell once, with its depth (distance from starting point)
+        stack = [((-1,0),(1,0),0)] # ((Cell), (direction), depth)
+        
+        while stack:
+            current_cell, current_direction, depth = stack.pop(0) # Remove 0 for depth search, faster but makes the video look less good
+            visit(current_cell, current_direction, depth)
+            
+        results["0_0"] = len(visited_cells)-1
         
         if generate_video:
+            cells_order = sorted(list(visited_cells), key = lambda x: x[1])
+            cells_order = [list(g) for key, g in groupby(cells_order, key = lambda x: x[1])]
+            cells_order = [[j[0] for j in i] for i in cells_order][1:]
             TARGET_SIZE = 500
             UPSCALE = TARGET_SIZE // size
-            FPS = 60
+            FPS = 30
             FINAL_PAUSE = 1 # How much seconds do we stay on last state
             s = size * UPSCALE
             videodims = (s,s)
@@ -83,28 +95,15 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
             video = cv2.VideoWriter("test.mp4",fourcc, FPS,videodims)
             im = Image.new(mode="RGB", size=(s, s), color = (255,255,255))
             
-        while stack:
-            current_cell, current_direction = stack.pop(0)
-            visit(current_cell, current_direction)
-            
-            if generate_video and len(visited_cells) != len(previous_v):
-                last_v = list(previous_v ^ visited_cells)[0] # Get the last cell found
-                previous_l = len(visited_cells)
-                previous_v = deepcopy(visited_cells)
-                
-                if -1 not in last_v:
-                    im = current_img(im, last_v, i, upscale = UPSCALE)
-                    add_frame(video,im)
-                    i+=1
-                    print(f"{i} frames created", end = '\r')
-        
-        results["0_0"] = len(visited_cells)-1
-        
-        if generate_video:
+            for i, cells in enumerate(cells_order):
+                im = current_img(im, cells, upscale = UPSCALE)
+                add_frame(video,im)
+                print(f"{i+1} / {len(cells_order)} frames created", end = '\r')
+            print()
             for _ in range(FINAL_PAUSE*FPS):
                 add_frame(video,im)               
             video.release()
-        
+            
     elif part == 2:
         visited = set()
         visited_cells = set()
@@ -146,5 +145,5 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
 
     return (results[max(results, key=results.get)])
 
-print(solve("16-input.txt", part = 1, debug = True, generate_video = True))
+print(solve("16-input.txt", part = 1, debug = False, generate_video = True))
 
