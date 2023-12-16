@@ -1,6 +1,9 @@
 import re
 from typing import *
-import sys
+from PIL import Image, ImageDraw, ImageFont
+import cv2
+import numpy as np
+from copy import deepcopy
 
 def get_txt_array(input_name: str) -> List[str]:
     with open(input_name,'r',encoding = 'utf-8') as f:
@@ -18,7 +21,18 @@ def debug_print(v, g):
     for el in t:
         print(el)
 
-def solve(input_name: str, part: int, debug: bool = False) -> int:
+def current_img(last_image, new_pixel, i, upscale):
+    x, y = new_pixel[0], new_pixel[1]
+    for dx in range(upscale):
+        for dy in range(upscale):
+            last_image.putpixel((upscale*x+dx,upscale*y+dy), (255,0,0))
+    return last_image
+
+def add_frame(vid, fr):
+    imtemp = fr.copy()
+    vid.write(cv2.cvtColor(np.array(imtemp), cv2.COLOR_RGB2BGR))
+
+def solve(input_name: str, part: int, debug: bool = False, generate_video: bool = False) -> int:
     def visit(cell: Tuple[int, int], direction: Tuple[int, int]):
         visited.add(cell + direction)
         visited_cells.add(cell)
@@ -52,22 +66,50 @@ def solve(input_name: str, part: int, debug: bool = False) -> int:
     size = len(grid)
     
     if part == 1: 
+        i = 0
         visited = set()
         visited_cells = set()
         stack = [((-1,0),(1,0))] # ((Cell), (direction))
+        previous_v = deepcopy(visited_cells)
         
+        if generate_video:
+            TARGET_SIZE = 500
+            UPSCALE = TARGET_SIZE // size
+            FPS = 60
+            FINAL_PAUSE = 1 # How much seconds do we stay on last state
+            s = size * UPSCALE
+            videodims = (s,s)
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')    
+            video = cv2.VideoWriter("test.mp4",fourcc, FPS,videodims)
+            im = Image.new(mode="RGB", size=(s, s), color = (255,255,255))
+            
         while stack:
-            current_cell, current_direction = stack.pop()
+            current_cell, current_direction = stack.pop(0)
             visit(current_cell, current_direction)
+            
+            if generate_video and len(visited_cells) != len(previous_v):
+                last_v = list(previous_v ^ visited_cells)[0] # Get the last cell found
+                previous_l = len(visited_cells)
+                previous_v = deepcopy(visited_cells)
+                
+                if -1 not in last_v:
+                    im = current_img(im, last_v, i, upscale = UPSCALE)
+                    add_frame(video,im)
+                    i+=1
+                    print(f"{i} frames created", end = '\r')
         
         results["0_0"] = len(visited_cells)-1
-            
+        
+        if generate_video:
+            for _ in range(FINAL_PAUSE*FPS):
+                add_frame(video,im)               
+            video.release()
+        
     elif part == 2:
         visited = set()
         visited_cells = set()
         for x in range(size):
             for i in range(4):
-                grid = get_txt_array(input_name)
                 visited = set()
                 visited_cells = set()
 
@@ -83,6 +125,9 @@ def solve(input_name: str, part: int, debug: bool = False) -> int:
                 while stack:
                     current_cell, current_direction = stack.pop()
                     visit(current_cell, current_direction)
+                    if debug:
+                        im = current_img(grid,visited_cells)
+
 
                 if i == 0:
                     results[str(x) + "_0"] = len(visited_cells)-1
@@ -98,7 +143,8 @@ def solve(input_name: str, part: int, debug: bool = False) -> int:
             debug_print(visited_cells, grid)
         else:
             print(f"Max length found for starting point {max(results, key=results.get)}")
-    
+
     return (results[max(results, key=results.get)])
 
-print(solve("16-input.txt", part = 2, debug = True))
+print(solve("16-input.txt", part = 1, debug = True, generate_video = True))
+
