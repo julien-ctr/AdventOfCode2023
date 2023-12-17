@@ -1,5 +1,6 @@
 import re
 from typing import *
+from copy import deepcopy
 
 def read_data(input_name: str) -> str:
     with open(input_name,'r') as f:

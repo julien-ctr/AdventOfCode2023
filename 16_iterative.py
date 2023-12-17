@@ -1,9 +1,10 @@
 import re
 from typing import *
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageColor
 import cv2
 import numpy as np
 from itertools import groupby
+import colorsys
 
 def get_txt_array(input_name: str) -> List[str]:
     with open(input_name,'r',encoding = 'utf-8') as f:
@@ -22,12 +23,23 @@ def debug_print(v, g):
     for el in t:
         print(el)
 
-def current_img(last_image, new_pixels, upscale):
+def current_img(last_image, new_pixels, upscale, i):
     for new_pixel in new_pixels:
         x, y = new_pixel[0], new_pixel[1]
         for dx in range(upscale):
             for dy in range(upscale):
-                last_image.putpixel((upscale*x+dx,upscale*y+dy), (255,0,0))
+                # Input
+                (h, s, v) = (i%360, 1, 1)
+
+                # Normalize
+                h = h / 360
+
+                # Convert to RGB
+                (r, g, b) = colorsys.hsv_to_rgb(h, s, v)
+
+                # Expand RGB range
+                (r, g, b) = (int(r * 255), int(g * 255), int(b * 255))
+                last_image.putpixel((upscale*x+dx,upscale*y+dy), (r,g,b))
     return last_image
 
 def add_frame(vid, fr):
@@ -72,7 +84,7 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
     if part == 1: 
         i = 0
         visited = set() # Can contain a cell multiple times if it has been reached with different direction rays
-        visited_cells = set() # Only countains each cell once, with its depth (distance from starting point)
+        visited_cells = set() # Only contains each cell once, with its depth (distance from starting point)
         stack = [((-1,0),(1,0),0)] # ((Cell), (direction), depth)
         
         while stack:
@@ -96,7 +108,7 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
             im = Image.new(mode="RGB", size=(s, s), color = (255,255,255))
             
             for i, cells in enumerate(cells_order):
-                im = current_img(im, cells, upscale = UPSCALE)
+                im = current_img(im, cells, UPSCALE, i)
                 add_frame(video,im)
                 print(f"{i+1} / {len(cells_order)} frames created", end = '\r')
             print()
