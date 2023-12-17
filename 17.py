@@ -36,7 +36,6 @@ class Graph():
         return (n2[0]-n1[0],n2[1]-n1[1])
         
     def calculate_distances(self, end, minc, maxc):
-        f = open("log.txt",'w+')
         distances = set()
         pq = [(self.get_node("0_1").v, 1, (0,1), "0_1"),(self.get_node("1_0").v, 1, (1,0), "1_0")]
         heapq.heapify(pq)
@@ -58,26 +57,15 @@ class Graph():
             for neighbour in self.get_node(current_node).possible_neighbours(direction):
                 val = self.get_node(neighbour).v
                 distance = current_distance + val
-                f.write(f"\n\nCurrently at {current_node} evaluating {neighbour} (val = {val}).\nDistance to reach {neighbour} would be {distance}. Last movement used to reach: {direction}\nsame_dir : {combo}")
                 _direction = self.get_dir(current_node, neighbour)
                 
-                if combo < minc and direction != _direction and direction != (0,0):
-                    continue
-                if combo > maxc: 
-                    continue
-                    
-                if direction == _direction or direction == (0,0): #Same direction
-                    _combo = combo + 1
-                   
-                else: #Changed directions
-                    _combo = 1
+                if direction == _direction and combo < maxc :
+                    heapq.heappush(pq,(distance, combo+1, _direction,neighbour))
+                
+                if direction != _direction and combo >= minc:
+                    heapq.heappush(pq,(distance, 1, _direction,neighbour))
+                
 
-    
-                heapq.heappush(pq,(distance, _combo, _direction,neighbour))
-                f.write(f"\nAdded {neighbour} to heap. Combo is now {_combo}, and direction is {_direction}")
-
-
-        f.close()
             
     def get_node(self, label):
         return self.nodes[label]
@@ -160,4 +148,4 @@ def part1(input_name: str) -> int:
     p = G.calculate_distances(en, 1, 3)
     print(p)
 
-part1("sample.txt")
+part1("17-input.txt")
