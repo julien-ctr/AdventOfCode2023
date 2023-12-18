@@ -26,11 +26,6 @@ class Graph():
             n2.neighbours.append(n1.n)
     
     def get_dir(self, node_1, node_2):
-        if node_1 == "start" or node_2 == "end":
-            return (0,1)
-        if node_2 == "start" or node_1 == "end" :
-            return (0,-1)
-            
         n1 = (int(node_1.split("_")[0]),int(node_1.split("_")[1]))
         n2 = (int(node_2.split("_")[0]),int(node_2.split("_")[1]))
         return (n2[0]-n1[0],n2[1]-n1[1])
@@ -76,7 +71,7 @@ class Graph():
         for n in self.nodes.keys():
             if int(n.split("_")[0]) == line+1:
                 line += 1
-                s += "\n"
+                s += "\n" 
             s += n
             if n.split("_")[0] + "_" + str(int(n.split("_")[1])+1) in self.nodes.keys():
                 s += ' - '
@@ -124,8 +119,6 @@ def part1(input_name: str) -> int:
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
             G.add_node(Node(f"{i}_{j}", matrix[i][j]))
-
-    G.add_node(Node("end",0))
     
     for i in range(size[0]):
         for j in range(size[1]):
@@ -137,13 +130,9 @@ def part1(input_name: str) -> int:
                 G.add_neigh(f"{i}_{j}",f"{i}_{j-1}")
             if j < size[1]-1:
                 G.add_neigh(f"{i}_{j}",f"{i}_{j+1}")
-    global st, en
     
     st = "0_0"
     en = f"{size[0]-1}_{size[1]-1}"
-    
-    G.add_neigh(en, "end")
-
     
     p = G.calculate_distances(en, 1, 3)
     print(p)
