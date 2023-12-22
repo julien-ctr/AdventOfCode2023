@@ -131,5 +131,5 @@ def part2(input_name: str) -> int:
 
     return y
 
-part2("21-input.txt")
+print(part2("21-input.txt"))
 
