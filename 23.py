@@ -141,9 +141,7 @@ def part2(input_name: str) -> int:
         visited += (current,)
 
         for neighbour in graph.get_node(current).neighbours:
-            neigh_label = neighbour[0]
-            neigh_dist = neighbour[1]
-            neigh_coord = tuple(map(int, neigh_label.split("_")))
+            neigh_label, neigh_dist = neighbour
             if neigh_label not in visited:
                 stack.append((neigh_label, dist + neigh_dist, visited))
     
