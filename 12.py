@@ -193,7 +193,7 @@ def part2(input: str, debug = False) -> int:
     
     
 start = time.time()
-t2 = part2("12-input.txt")
+t2 = part2("inputs/12-input.txt")
 end = time.time()
 
 print(end-start)

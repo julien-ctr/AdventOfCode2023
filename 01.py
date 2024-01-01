@@ -20,7 +20,7 @@ def islettersnumber(txt, i):
 
 sum = 0
 
-with open("01-input.txt", "r", encoding="utf-8") as f:
+with open("inputs/01-input.txt", "r", encoding="utf-8") as f:
 	t = []
 	for line in f:
 		i = 0

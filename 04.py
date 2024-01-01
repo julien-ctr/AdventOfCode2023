@@ -42,4 +42,4 @@ def part2(input_file: str) -> int:
     return sum(count)
 
 if __name__ == "__main__":
-    print(part2("04-input.txt"))
+    print(part2("inputs/04-input.txt"))

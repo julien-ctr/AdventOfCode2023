@@ -65,10 +65,12 @@ def part1(input_name: str) -> int:
     Probabilistic approach to find the minimal cut of a graph
     We know that we can find a cut of 3 edges so that's what we aim for
     """
-    
+    c = 0
     txt = get_txt_array(input_name)
     graph = Graph()
     while all([len(v.neighbours) != 3 for v in graph.nodes.values()]):
+        c += 1
+        
         # Step 1 : create the graph
         graph = Graph()
         for line in txt:
@@ -87,8 +89,18 @@ def part1(input_name: str) -> int:
             graph.merge_nodes(node_a,node_b)
         
     print(graph)
-
+    
+    result = 1
+    
     for k, v in graph.nodes.items():
         print(k, v.value)
+        result *= v.value
+        
+    print(f"Result : {result} (found after {c} trials)")
+    return result
+        
 
-part1('25-input.txt')
+start = time.time()
+part1('inputs/25-input.txt')
+end = time.time()
+print(f"Solution found in {round(end-start,2)} seconds")

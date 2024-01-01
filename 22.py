@@ -153,4 +153,4 @@ def parts(input_name: str) -> int:
     
     print(f"Part 2 : {fall_counts}")
 
-parts("22-input.txt")
+parts("inputs/22-input.txt")

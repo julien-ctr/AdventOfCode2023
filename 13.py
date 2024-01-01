@@ -83,5 +83,5 @@ def solve(input_name: str, part: int, debug = False) -> int:
     
     return result
 
-res = solve("13-input.txt", part = 1, debug = False)
+res = solve("inputs/13-input.txt", part = 1, debug = False)
 print(res)

@@ -125,16 +125,16 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
                 visited_cells = set()
 
                 if i == 0:
-                    stack = [((x,-1),(0,1))]
+                    stack = [((x,-1),(0,1),0)]
                 elif i == 1:
-                    stack = [((x,size),(0,-1))]
+                    stack = [((x,size),(0,-1),0)]
                 elif i == 2:
-                    stack = [((-1,x),(1,0))]
+                    stack = [((-1,x),(1,0),0)]
                 elif i == 3:
-                    stack = [((size,x),(-1,0))]
+                    stack = [((size,x),(-1,0),0)]
                     
                 while stack:
-                    current_cell, current_direction = stack.pop()
+                    current_cell, current_direction, _ = stack.pop()
                     visit(current_cell, current_direction)
                     if debug:
                         im = current_img(grid,visited_cells)
@@ -157,5 +157,5 @@ def solve(input_name: str, part: int, debug: bool = False, generate_video: bool 
 
     return (results[max(results, key=results.get)])
 
-print(solve("16-input.txt", part = 1, debug = False, generate_video = True))
+print(solve("inputs/16-input.txt", part = 2, debug = False, generate_video = False))
 

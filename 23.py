@@ -149,7 +149,7 @@ def part2(input_name: str) -> int:
     return max_path[0]
     
 start = time.time()
-part2("23-input.txt")
+part2("inputs/23-input.txt")
 end = time.time()
 print(f"Found in {round(end-start,2)} seconds")
     

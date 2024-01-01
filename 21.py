@@ -6,7 +6,7 @@ def get_txt_array(input_name: str) -> List[str]:
     with open(input_name,'r',encoding = 'utf-8') as f:
         return f.read().splitlines()
         
-def get_nearby_space(t: List[Tuple[int,int]], d: Dict,v : Set) -> int:
+def get_nearby_space(t: List[Tuple[int,int]], d: Dict, v : Set) -> int:
     result = set()
     for el in t:
 
@@ -20,7 +20,7 @@ def get_nearby_space(t: List[Tuple[int,int]], d: Dict,v : Set) -> int:
             result.add((el[0],el[1]-1))
     return result
     
-def get_nearby_space2(t: List[Tuple[int,int]], d: Dict,v : Set) -> int:
+def get_nearby_space2(t: List[Tuple[int,int]], d: Dict, v : Set) -> int:
     result = set()
     max_width = max([key[1] for key in d.keys()])+1
     max_height = max([key[0] for key in d.keys()])+1
@@ -28,22 +28,15 @@ def get_nearby_space2(t: List[Tuple[int,int]], d: Dict,v : Set) -> int:
     for el in t:
         if d.get(((el[0]+1)%max_height,el[1]%max_width), "#") != "#" and (el[0]+1, el[1]) not in v:
             result.add((el[0]+1,el[1]))
-            
-            # ~ print(f"added {(el[0]+1,el[1])}")
-            # ~ print(f"result = {result}")
+
         if d.get(((el[0]-1)%max_height,el[1]%max_width), "#") != "#" and (el[0]-1, el[1]) not in v:
             result.add((el[0]-1,el[1]))
-            # ~ print(f"added {(el[0]-1,el[1])}")
-            # ~ print(f"result = {result}")
+
         if d.get((el[0]%max_height,(el[1]+1)%max_width), "#") != "#" and (el[0], el[1]+1) not in v:
             result.add((el[0],el[1]+1))
-            
-            # ~ print(f"added {(el[0],el[1]+1)}")
-            # ~ print(f"result = {result}")
+
         if d.get((el[0]%max_height,(el[1]-1)%max_width), "#") != "#" and (el[0], el[1]-1) not in v:
             result.add((el[0],el[1]-1))
-            # ~ print(f"added {(el[0],el[1]-1)}")
-            # ~ print(f"result = {result}")
     
     return result
 
@@ -131,5 +124,5 @@ def part2(input_name: str) -> int:
 
     return y
 
-print(part2("21-input.txt"))
+print(part2("inputs/21-input.txt"))
 

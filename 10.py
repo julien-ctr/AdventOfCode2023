@@ -120,4 +120,4 @@ def solve(input: str, part: int) -> int:
                 
     return count
 
-print(solve('10-input.txt', part = 2))
+print(solve('inputs/10-input.txt', part = 2))

@@ -139,6 +139,6 @@ def part2(input_name: str, debug: bool = True) -> int:
 
     return final_score
 
-a = part2("14-input.txt", debug = True)
+a = part2("inputs/14-input.txt", debug = True)
 print(a)  
 

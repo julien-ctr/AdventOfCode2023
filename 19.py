@@ -128,10 +128,10 @@ def part2(input_name: str) -> int:
     stack = [(1,4000, 1,4000, 1,4000, 1,4000, "in")]
     
     while stack:
-        print(f"\nStack before pop : {stack}")
+        #print(f"\nStack before pop : {stack}")
         rule_i = 0
         a_x, b_x, a_m, b_m, a_a, b_a, a_s, b_s, wf = stack.pop()
-        print(f"Stack after pop : {stack}")
+        #print(f"Stack after pop : {stack}")
         
         if wf == "R":
             continue
@@ -146,13 +146,12 @@ def part2(input_name: str) -> int:
             rb = range_valid(workflows[wf][rule_i],(a_x,b_x),(a_m,b_m),(a_a,b_a),(a_s,b_s))
             for n in rb:
                 res.append(n)
-            print(res)
 
         
         for r in res:
             stack.append(r)
     print(count)
     
-part2("19-input.txt")
+part2("inputs/19-input.txt")
 
     

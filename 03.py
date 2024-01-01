@@ -33,7 +33,7 @@ def scan_number(y: int, x: int, txt: str) -> int:
     return int(res)
 
 def build_txt_array(input_file: str) -> List[str]:
-    with open("3-input.txt", "r", encoding = "utf-8") as f:
+    with open(input_file, "r", encoding = "utf-8") as f:
         return f.read().splitlines()
 
 def part1(input_file: str) -> int:
@@ -71,4 +71,4 @@ def part2(input_file: str) -> int:
                     s += m
     return s
     
-print(part2("03-input.txt"))
+print(part2("inputs/03-input.txt"))

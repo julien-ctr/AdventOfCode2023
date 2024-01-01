@@ -14,7 +14,7 @@ def get_hand_value(h: str, jokers = False) -> int:
         three = re.compile(r"(.)(?:.*\1){2}")
         pair = re.compile(r"(.).*\1")
         #high_card = re.compile(r"^(.)([^\1])([^\1\2])([^\1\2\3])([^\1\2\3\4])$")
-    if jokers:
+    else:
         five = re.compile(r"^J*(.)(?:\1*J*)*$")
         four = re.compile(r"(.)(?:(?:[^J\1]*)(?:\1|J)){3,}.*$")
         #full_house = re.compile(r"^(.)\1{0,2}([^\1])\1*\2+\1*\2+$")
@@ -113,7 +113,7 @@ start = time.time()
 #print(solve('07-input.txt', jokers = False, debug = True))
 
 #Part 2
-print(solve('07-input.txt', jokers = True, debug = False))
+print(solve('inputs/07-input.txt', jokers = True, debug = False))
 
 end = time.time()
 

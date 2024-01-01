@@ -79,4 +79,4 @@ def part2(input: str, debug: bool = False) -> int:
     return score
     
     
-print(part2('09-input.txt', debug = True))
+print(part2('inputs/09-input.txt', debug = False))

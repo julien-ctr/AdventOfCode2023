@@ -37,8 +37,6 @@ def part1(input: str, debug: bool = False) -> int:
             print(f"\nWent  {instructions[i%len(instructions)]}")
             print(f"now at {act} after {i} steps. Next choices : {d[act]}")
       
-    
-  
     return i
 
 def part2(input: str, debug: bool = False) -> int:
@@ -49,8 +47,6 @@ def part2(input: str, debug: bool = False) -> int:
     a = [line.split('(')[1].split(',')[0] for line in txt[2:]]
     b = [line.split(',')[-1].split(')')[0].strip() for line in txt[2:]]
     d = dict((key, value) for key, value in zip(starts, zip(a,b)))
-  
-    
   
     acts = []
     for line in txt[2:]:
@@ -81,4 +77,4 @@ def part2(input: str, debug: bool = False) -> int:
         r = ppcm(r, m)
     return r
 
-print(part2("08-input.txt", debug = False))
+print(part2("inputs/08-input.txt", debug = False))

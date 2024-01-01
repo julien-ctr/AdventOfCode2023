@@ -138,4 +138,4 @@ def part2(input_name: str) -> int:
 
     return ppcm(list(final_conj_inputs.values()))
 
-print(f"{part2('20-input.txt'):,}")
+print(f"{part2('inputs/20-input.txt'):,}")

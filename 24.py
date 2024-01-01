@@ -83,5 +83,5 @@ def part2(input_name: str) -> int:
     print(s[px] + s[py] + s[pz])
     return s[px] + s[py] + s[pz]
     
-part2("24-input.txt")
+part2("inputs/24-input.txt")
 

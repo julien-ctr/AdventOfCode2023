@@ -83,4 +83,4 @@ def part2(input: str) -> int:
     
     return sum(min_dists)
     
-print(part2("11-input.txt"))
+print(part2("inputs/11-input.txt"))

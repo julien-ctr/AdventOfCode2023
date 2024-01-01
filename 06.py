@@ -40,7 +40,7 @@ def part2(input: str) -> int :
 def part2bis(input: str) -> int :
     """
     This solution using upper and lower bounds with while loops
-    appears to be about 3 times more time efficient than part2()
+    appears to be about 6 times more time efficient than part2()
     """
     
     txt = get_txt_array(input)
@@ -53,12 +53,11 @@ def part2bis(input: str) -> int :
     while i < j and i * (times-i) < distances:
         i += 1
 
-    while i < j and j * (times-j) < distances:
-        j -= 1
-
+    j = times - i # The function v(t) (velocity according to time) is quadratic and therefore symetrical 
+    
     return j-i+1
 
 start = time.time()
-a = part2bis("06-input.txt")
+a = part2bis("inputs/06-input.txt")
 end = time.time()
 print(f"{a} (found in {end-start} seconds)")

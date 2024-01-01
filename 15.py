@@ -43,4 +43,4 @@ def part2(input_name: str):
         
     return total
         
-print(part2("15-input.txt"))
+print(part2("inputs/15-input.txt"))

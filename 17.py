@@ -112,7 +112,7 @@ def get_2d_array(input_name: str) -> List[str]:
         return [[int(x) for x in line]for line in t]
    
 
-def part1(input_name: str) -> int:
+def solve(input_name: str, part: int) -> int:
     matrix = get_2d_array(input_name)
     size = (len(matrix),len(matrix[0]))
     G = Graph()
@@ -134,7 +134,10 @@ def part1(input_name: str) -> int:
     st = "0_0"
     en = f"{size[0]-1}_{size[1]-1}"
     
-    p = G.calculate_distances(en, 1, 3)
-    print(p)
+    if part == 1:
+        p = G.calculate_distances(en, 1, 3)
+    else:
+        p = G.calculate_distances(en, 4, 10)
+    return p
 
-part1("17-input.txt")
+print(solve("inputs/17-input.txt", part = 2))

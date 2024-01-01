@@ -36,7 +36,7 @@ print(sum(games_id))
 
 game_powers = []
 
-with open("02-input.txt", "r", encoding = "utf-8") as f:
+with open("inputs/02-input.txt", "r", encoding = "utf-8") as f:
 	for i, line in enumerate(f) :
 		game = line.split(":")[1:][0].split(";")
 		game = ",".join(game)

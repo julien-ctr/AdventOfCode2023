@@ -145,5 +145,6 @@ def part2(input_name: str) -> int:
         perimeter += abs(positions[i][0]-positions[i+1][0]) + abs(positions[i][1]-positions[i+1][1])
         
     return ((s+perimeter)//2 + 1)
-print(part2("18-input.txt"))
+
+print(part2("inputs/18-input.txt"))
     

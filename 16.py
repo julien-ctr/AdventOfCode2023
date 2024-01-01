@@ -134,4 +134,4 @@ def part2(input_name: str, debug: bool = False) -> int:
     
     
 sys.setrecursionlimit(10000) #Necessary if using recursive approach
-print(part1_iter("16-input.txt", debug = True))
+print(part2("inputs/16-input.txt", debug = True))
